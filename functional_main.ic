@@ -88,12 +88,7 @@ void drive_north(void) {
 
 
 void main() { 
-    init_bkgd_gps();
-    gps_print_enable();
-    
-    for(;;)
-      ;
-    
+   
     for(;;) {
         init_log();
         init_bkgd_gps();
