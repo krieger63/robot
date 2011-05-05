@@ -6,9 +6,9 @@
  */
 
 ///Left motor port
-#define MOT_LEFT  1
+#define MOTOR_LEFT  1
 ///Right motor port
-#define MOT_RIGHT 3
+#define MOTOR_RIGHT 3
 
 ///Left shaft encoder port
 #define SHAFT_LEFT  4
