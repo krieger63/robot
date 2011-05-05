@@ -1,0 +1,14 @@
+#define MOT_LEFT  1
+#define MOT_RIGHT 3
+
+#define SHAFT_LEFT  4
+#define SHAFT_RIGHT 6
+
+#define CDS 2
+
+#use "encoders/sencdr4.icb"
+#use "encoders/sencdr4.icb"
+
+#define SHAFT_LEFT_COUNT  encoder4_counts
+#define SHAFT_RIGHT_COUNT encoder6_counts
+
