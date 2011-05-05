@@ -9,6 +9,7 @@
 #use "gps_module.ic"
 #use "util.ic"
 
+
 /// Robot angle, 0 to 359 degrees
 int robot_heading = 90;
 /// Last GPS update time
@@ -17,8 +18,7 @@ long gps_time;
 int facing_north = 1;
 int flip_facing_north = 0;
 int gps_print = 0;
-
-int theta;
+int ccw;
 
 //Angle between GPS and robot
 #define GPS_OFFSET 90
@@ -44,7 +44,10 @@ int update_heading(void) {
           robot_heading += 180;
         
         // PARENTHESES HERE?
-        if(flip_facing_north || abs(robot_heading - last_heading) > 45)  {
+        if(flip_facing_north
+           || ( ccw && last_heading%180 > 90 && robot_heading%180 < 90)
+           || (!ccw && last_heading%180 < 90 && robot_heading%180 > 90) )
+          {
             if(facing_north) {
                 facing_north = 0;
                 robot_heading += 180;
@@ -56,7 +59,7 @@ int update_heading(void) {
         } 
         
         if(gps_print)
-          printf("X:%d Y:%d H:%d Theta:%d\n", gps_x, gps_y, robot_heading, theta);
+          printf("X:%d Y:%d H:%d CCW:%d\n", gps_x, gps_y, robot_heading, ccw);
         
         return 1;
     } else

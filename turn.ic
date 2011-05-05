@@ -19,8 +19,6 @@
 #define CLOCKWISE 8675309
 #define CTRCLOCKWISE 1337
 
-//global variable to keep track of what direction we're turning
-int ccw;
 
 void turn_to_angle(int ang) {
     while(abs(robot_heading - ang) > 5) {
@@ -30,7 +28,7 @@ void turn_to_angle(int ang) {
 }
 
 void turn(int ang) {
-    int ms_to_turn;
+    int ms_to_turn, theta;
     
     ao();
     
