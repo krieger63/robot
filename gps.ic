@@ -1,0 +1,7 @@
+#use "gps/gps_module.ic"
+
+void gps_update() {
+  while(gps_get_data())
+    ;
+}
+

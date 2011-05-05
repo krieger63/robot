@@ -1,0 +1,133 @@
+/**
+ * @file util.ic
+ * @brief Utility functions
+ * @author Andrew Krieger
+ * @date 4/25/2011
+ */
+
+#use "defines.ic"
+#use "gps.ic"
+
+/**
+ * @brief Drive up the hill
+ */
+void drive_up_hill() {
+  int hdg;
+  
+  printf("Going up hill\n");
+
+  for(;;) {
+    gps_update();
+
+    if(gps_y >= 150 && gps_y <= 256)
+      break;
+
+    hdg = (gps_heading + 90) % 180;
+    if(hdg < 90 - SMALL_ANGLE) {
+      if(hdg < 90 - BIG_ANGLE) {
+	motor(MOTOR_RIGHT,  75);
+	motor(MOTOR_LEFT,    0);
+      } else {
+	motor(MOTOR_RIGHT, 100);
+	motor(MOTOR_LEFT,   75);
+      }
+    } else if(hdg > 90 + SMALL_ANGLE) {
+      if(hdg > 90 + BIG_ANGLE) {
+	motor(MOTOR_LEFT,   75);
+	motor(MOTOR_RIGHT,   0);
+      } else {
+	motor(MOTOR_LEFT,  100);
+	motor(MOTOR_RIGHT,  75);
+      }
+    } else {
+      motor(MOTOR_LEFT,  100);
+      motor(MOTOR_RIGHT, 100);
+    }
+  }
+
+  ao();
+}
+
+/**
+ * @brief Drive toward the hay bale elevator
+ */
+void drive_to_elevator() {
+  int msec_to_turn;
+  int last_x;
+
+for(;;) {
+    // turn to face 180 degrees
+  printf("Facing elevator\n");
+    for(;;) {
+      gps_update();
+
+      if(gps_heading < 3 || gps_heading > 178)
+	break;
+
+      msec_to_turn = (int)((float)gps_heading * (2.0 / 360.0));
+
+      motor(MOTOR_LEFT,  100);
+      motor(MOTOR_RIGHT,-100);
+
+      msleep(msec_to_turn);
+    }
+    ao();
+
+    printf("Testing direction\n");
+
+    //See if we're at 0 or 180.  Drive forward and watch x
+    gps_update();
+    last_x = gps_x;
+
+    motor(MOTOR_LEFT, 100);
+    motor(MOTOR_RIGHT,100);
+
+    msleep(250);
+
+    gps_update();
+    if(gps_x > last_x) {
+      printf("About face\n");
+      //Turn part way around.  The loop will get us the rest of the way.
+      motor(MOTOR_LEFT,  100);
+      motor(MOTOR_RIGHT,-100);
+
+      msleep(250);
+      continue;
+    }
+
+    printf("Go along -X\n");
+    //Get to proper X coordinate.  If we get too far off straight, reset our angle
+    motor(MOTOR_LEFT, 100);
+    motor(MOTOR_RIGHT,100);
+    for(;;) {
+      gps_update();
+      if(gps_x <= -40)
+	break;
+      if(gps_heading < 10 || gps_heading > 170)
+	break;
+    }
+    ao();
+
+    printf("Back onto course\n");
+    if(gps_x > -40)
+      continue;
+
+    printf("Got to X\n");
+    return;
+  }
+}
+
+/**
+ * @brief Main
+ */
+int main() {
+  gps_initialize_knob();
+  gps_enable();
+
+  for(;;) {
+    press_start();
+    drive_up_hill();
+    drive_to_elevator();    
+  }
+}
+
