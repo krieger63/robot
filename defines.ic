@@ -1,14 +1,28 @@
+/**
+ * @file util.ic
+ * @brief Utility functions
+ * @author Andrew Krieger
+ * @date 4/25/2011
+ */
+
+///Left motor port
 #define MOT_LEFT  1
+///Right motor port
 #define MOT_RIGHT 3
 
+///Left shaft encoder port
 #define SHAFT_LEFT  4
+///Right shaft encoder port
 #define SHAFT_RIGHT 6
 
+///CdS sensor port
 #define CDS 2
 
 #use "encoders/sencdr4.icb"
 #use "encoders/sencdr4.icb"
 
+///Left shaft count variable, updated by interrupts
 #define SHAFT_LEFT_COUNT  encoder4_counts
+///Right shaft count variable, updated by interrupts
 #define SHAFT_RIGHT_COUNT encoder6_counts
 
