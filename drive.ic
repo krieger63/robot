@@ -8,6 +8,7 @@
 #use "defines.ic"
 #use "gps.ic"
 #use "util.ic"
+#use "turn.ic"
 
 #define SMALL_ANGLE 5
 #define BIG_ANGLE 15
@@ -20,32 +21,15 @@ void drive_up_hill() {
     
     printf("Going up hill\n");
     
+    SHAFT_LEFT_COUNT = SHAFT_RIGHT_COUNT = 0;
+    
     for(;;) {
-        gps_update();
-        
-        if(gps_y >= 150 && gps_y <= 256)
-          break;
-        
-        hdg = (gps_heading + 90) % 180;
-        if(hdg < 90 - SMALL_ANGLE) {
-            if(hdg < 90 - BIG_ANGLE) {
-                motor(MOTOR_RIGHT,  100);
-                motor(MOTOR_LEFT,    0);
-            } else {
-                motor(MOTOR_RIGHT, 100);
-                motor(MOTOR_LEFT,   60);
-            }
-        } else if(hdg > 90 + SMALL_ANGLE) {
-            if(hdg > 90 + BIG_ANGLE) {
-                motor(MOTOR_LEFT,   100);
-                motor(MOTOR_RIGHT,    0);
-            } else {
-                motor(MOTOR_LEFT,  100);
-                motor(MOTOR_RIGHT,  60);
-            }
+        if(digital(FRONT_RIGHT_SWITCH)) {
+            motor(MOTOR_RIGHT,100);
+            motor(MOTOR_LEFT, 100);
         } else {
-            motor(MOTOR_LEFT,  100);
-            motor(MOTOR_RIGHT, 100);
+            motor(MOTOR_RIGHT, 50);
+            motor(MOTOR_LEFT, 100);
         }
     }
     
@@ -53,45 +37,16 @@ void drive_up_hill() {
 }
 
 /**
- * @brief Face horizontal - east or west
- */
-void face_horiz(void) {
-    for(;;) {
-        gps_update();
-        gps_update();
-        
-        if(gps_heading > 87 && gps_heading < 93)
-          break;
-        
-        motor(MOTOR_LEFT,  100);
-        motor(MOTOR_RIGHT,-100);
-        
-        msleep((long)((float)((gps_heading + 90)%180) * 2.0/360.0));
-        ao();
-    }
-}
-
-void face_west(void) {
-    int old_x;
-    for(;;) {
-        face_horiz();
-        
-        old_x = gps_x;
-        motor(MOTOR_LEFT, 100);
-        while(!gps_get_data());
-    }
-}
-
-/**
  * @brief Main
  */
 int main() {
+    int i;
     gps_initialize_knob();
     gps_enable();
     
     for(;;) {
         press_start();
-        face_horiz();
+        turn_to_angle(135);
     }
 }
 

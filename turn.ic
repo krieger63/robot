@@ -7,28 +7,30 @@
 
 int turn_to_angle(int ang)
 {
-	int theta;
-
-	gps_update();
-	theta = abs(ang - gps_heading);
-
-	while(theta > ERROR)	
-	{
-		gps_update();
-		theta = abs(ang - gps_heading);
-
-		if(ang > gps_heading)
-		{	
-			motor(MOTOR_LEFT,50);
-			motor(MOTOR_RIGHT,-50);
-			sleep(0.05);
-		}
-		else if(ang < gps_heading)
-		{
-			motor(MOTOR_LEFT,-50);
-			motor(MOTOR_RIGHT,50);
-			sleep(0.05);
-		}
-	}
-	return 1;
+    int theta;
+    
+    gps_update();
+    theta = abs(ang - gps_heading);
+    
+    while(theta > ERROR) 
+      {
+        gps_update();
+        theta = abs(ang - gps_heading);
+        
+        if(ang > gps_heading)
+          { 
+            motor(MOTOR_LEFT,50);
+            motor(MOTOR_RIGHT,-50);
+            sleep(0.05);
+            ao();
+        }
+        else if(ang < gps_heading)
+          {
+            motor(MOTOR_LEFT,-50);
+            motor(MOTOR_RIGHT,50);
+            sleep(0.05);
+            ao();
+        }
+    }
+    return 1;
 }
