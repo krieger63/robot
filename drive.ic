@@ -45,8 +45,13 @@ int main() {
     gps_enable();
     
     for(;;) {
+        printf("Press start\n");
         press_start();
+        printf("Turning\n");
         turn_to_angle(135);
+        ao();
+        
+        
     }
 }
 

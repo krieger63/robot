@@ -15,19 +15,20 @@ int turn_to_angle(int ang)
     while(theta > ERROR) 
       {
         gps_update();
+        printf("Hdg: %d ang: %d\n", gps_heading, ang);
         theta = abs(ang - gps_heading);
         
         if(ang > gps_heading)
           { 
-            motor(MOTOR_LEFT,50);
-            motor(MOTOR_RIGHT,-50);
+            motor(MOTOR_LEFT,100);
+            motor(MOTOR_RIGHT,-100);
             sleep(0.05);
             ao();
         }
         else if(ang < gps_heading)
           {
-            motor(MOTOR_LEFT,-50);
-            motor(MOTOR_RIGHT,50);
+            motor(MOTOR_LEFT,-100);
+            motor(MOTOR_RIGHT,100);
             sleep(0.05);
             ao();
         }
